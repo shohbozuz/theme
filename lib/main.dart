@@ -1,26 +1,46 @@
+// main.dart
 import 'package:flutter/material.dart';
-import 'package:testapp/Screen/Home.dart';
+import 'package:provider/provider.dart';
+import 'Screen/Home.dart';
+import 'theme_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      // Yangi ThemeProvider obyektini yaratish.
+      create: (context) => ThemeProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
-// dede
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      // Tema uchun o'zgartiruvchini ishlatish uchun providerni qo'shish.
       theme: ThemeData(
-        appBarTheme: AppBarTheme(backgroundColor: Colors.blue),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: false,
+        appBarTheme: AppBarTheme(
+          // Dark mode holati uchun rangni o'zgartirish.
+          backgroundColor: Provider.of<ThemeProvider>(context).isDarkMode
+              ? Colors.black
+              : Colors.deepOrange,
+        ),
+        useMaterial3: true,
       ),
-      home: HomeScreen(),
+      // Light mode temasi (kommentdan chiqarilgan).
+      // theme: ThemeData.light(),
+
+      // Dark mode temasi.
+      darkTheme: ThemeData.dark(),
+
+      // Joriy dark mode holatiga bog'liq qanday tema ishlatish kerakligini aniqlash.
+      themeMode: Provider.of<ThemeProvider>(context).isDarkMode
+          ? ThemeMode.dark
+          : ThemeMode.light,
+
+      // Asosiy ekranni ko'rsatish uchun widget.
+      home: MyHomePage(),
     );
   }
 }
